@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ensage;
@@ -456,9 +456,7 @@ namespace AIO_KillStealer
 
         private static void CastSpell(Ability spell, Unit target, Unit me, bool lsblock)
         {
-            if (spell.Cooldown > 0) return;
-            if (CanBeCasted(spell) && me.CanCast() && (target.Modifiers.FirstOrDefault(modifier => modifier.Name == "modifier_item_sphere") == null || target.FindItem("item_sphere").Cooldown > 0) || lsblock == false)
-                spell.UseAbility(target);
+            
         }
 
         private static bool CanBeCasted(Ability ability)
@@ -491,7 +489,7 @@ namespace AIO_KillStealer
         
         private static void Game_OnWndProc(WndEventArgs args)
         {
-            if (!Game.IsInGame || args.Msg != (ulong)Utils.WindowsMessages.WM_KEYUP || args.WParam != 'D' || Game.IsChatOpen)
+            if (!Game.IsInGame || args.Msg != (ulong)Utils.WindowsMessages.WM_KEYUP || args.WParam != 'I' || Game.IsChatOpen)
                 return;
             _activ = !_activ;
         }
@@ -505,7 +503,7 @@ namespace AIO_KillStealer
             foreach (var enemy in enemies)
             {
                 Vector2 screenPos;
-                var enemyPos = enemy.Position + new Vector3(0, 0, enemy.HealthBarOffset);
+                var enemyPos = enemy.Position + new Vector3(100, 0, enemy.HealthBarOffset);
                 if (!Drawing.WorldToScreen(enemyPos, out screenPos)) continue;
 
                 var start = screenPos + new Vector2(-51, -40);
@@ -513,11 +511,11 @@ namespace AIO_KillStealer
                 string spell;
                 if (!HeroDamageDictionary.TryGetValue(enemy, out damageNeeded) || !HeroSpellDictionary.TryGetValue(enemy, out spell)) continue;
 
-                var text = "D a m a g e  f o r  K S: " + string.Format("{0}", (int)damageNeeded);
-                var textSize = Drawing.MeasureText(text, "Arial", new Vector2(10, 150), FontFlags.None);
+                var text = " " + string.Format("{0}", (int)damageNeeded);
+                var textSize = Drawing.MeasureText(text, "Arial", new Vector2(0, 0), FontFlags.None);
                 var textPos = start + new Vector2(51 - textSize.X / 2, -textSize.Y / 2 + 2);
                 //Drawing.DrawRect(textPos - new Vector2(15, 0), new Vector2(10, 10), Drawing.GetTexture("materials/NyanUI/spellicons/" + spell + ".vmt"));
-                Drawing.DrawText(text, "Arial", textPos, new Vector2(10, 150), damageNeeded < 0 ? Color.Red : Color.White, FontFlags.AntiAlias | FontFlags.DropShadow);
+                Drawing.DrawText(text, "Arial", textPos, new Vector2(15, 150), damageNeeded < 0 ? Color.Red : Color.White, FontFlags.AntiAlias | FontFlags.DropShadow);
             }
         }
     }
